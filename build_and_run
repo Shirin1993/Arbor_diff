@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# set environment variables required to run custom Arbor installation
+if [[ ! -v PATH ]]; then
+	export PATH=$(readlink -f ~/arbor-v0.8.2-latest/bin)
+else
+	export PATH=$(readlink -f ~/arbor-v0.8.2-latest/bin):$PATH
+fi
+if [[ ! -v LD_LIBRARY_PATH ]]; then
+	export LD_LIBRARY_PATH=$(readlink -f ~/arbor-v0.8.2-latest/lib)
+else
+	export LD_LIBRARY_PATH=$(readlink -f ~/arbor-v0.8.2-latest/lib):$LD_LIBRARY_PATH
+fi
+if [[ ! -v PYTHONPATH ]]; then
+	export PYTHONPATH=$(readlink -f ~/arbor-v0.8.2-latest/lib/python3.8/site-packages) # or: .../python3.6/..., etc.
+else
+	export PYTHONPATH=$(readlink -f ~/arbor-v0.8.2-latest/lib/python3.8/site-packages):$PYTHONPATH # or: .../python3.6/..., etc.
+fi
+export CMAKE_PREFIX_PATH=$(readlink -f ~/arbor-v0.8.2-latest)
+
+# run the build script/modcc
+arbor-build-catalogue custom mechanisms
+
+# run the simulation
+python3 diffusion.py
